@@ -3,6 +3,321 @@
 <MudletPackage version="1.0">
     <TriggerPackage>
         <TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+            <name>Kaempfer</name>
+            <script>--[[
+tf Statuszeile:
+  {kaempfer_kampftaktik}{kaempfer_parade}{kaempfer_schildparade}{kaempfer_rueckendeckung}_\
++ {kaempfer_lp_text}{lp}_K:{mp}:{kaempfer_taktik}_{p_block}\
++ {arzt}{hydra_present}_FL:{vorsicht}:{flucht}_W:{weapon}_{modes}_\
++ {dim_node}_{clock}
+--]]
+
+--[[
+kaempfer_kampftaktik
+kaempfer_parade
+kaempfer_schildparade
+kaempfer_rueckendeckung
+kaempfer_lp_text
+lp
+mp
+kaempfer_taktik
+p_block
+arzt
+weapon
+modes
+--]]</script>
+            <triggerType>0</triggerType>
+            <conditonLineDelta>0</conditonLineDelta>
+            <mStayOpen>0</mStayOpen>
+            <mCommand></mCommand>
+            <packageName></packageName>
+            <mFgColor>#ff0000</mFgColor>
+            <mBgColor>#ffff00</mBgColor>
+            <mSoundFile></mSoundFile>
+            <colorTriggerFgColor>#000000</colorTriggerFgColor>
+            <colorTriggerBgColor>#000000</colorTriggerBgColor>
+            <regexCodeList/>
+            <regexCodePropertyList/>
+            <Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+                <name>Schaetz</name>
+                <script>
+  if not isOpen then   -- this checks for the first line, and initializes your variables
+    text = &quot;&quot;
+    len = 1
+    isOpen = true
+    -- Gegner merken
+    local wo = line:find(matches[2]) - 2
+    target = string.sub(line, 0, wo)
+  end
+
+  text = text .. line .. &quot; &quot;   
+  len = len + 1   
+  
+  if string.match(line, &quot; gross\.$&quot;) then   
+    len = 0
+    isOpen = false
+    -- do other stuff here to actually work with all the text you just captured
+    schaetz_ausgabe()
+  end
+
+  setTriggerStayOpen(&quot;Schaetz&quot;, len)   -- this sets the number of lines for the trigger to capture
+
+
+function schaetz_ausgabe()
+
+-- ----------------------------------------------------------------------------
+-- LP in %
+
+  if string.match(text, &quot;ist absolut fit und ist damit&quot;) then
+    schaetz_abs = 1
+  elseif string.match(text, &quot;ist leicht geschwaecht und ist damit&quot;) then
+    schaetz_abs = 0.9
+  elseif string.match(text, &quot;fuehlte sich auch schon besser und ist damit&quot;) then
+    schaetz_abs = 0.8
+  elseif string.match(text, &quot;ist leicht angekratzt und ist damit&quot;) then
+    schaetz_abs = 0.7
+  elseif string.match(text, &quot;ist nicht mehr taufrisch und ist damit&quot;) then
+    schaetz_abs = 0.6
+  elseif string.match(text, &quot;sieht recht mitgenommen aus und ist damit&quot;) then
+    schaetz_abs = 0.5
+  elseif string.match(text, &quot;wankt bereits bedenklich und ist damit&quot;) then
+    schaetz_abs = 0.4
+  elseif string.match(text, &quot;ist in keiner guten Verfassung und ist damit&quot;) then
+    schaetz_abs = 0.3
+  elseif string.match(text, &quot;braucht dringend einen Arzt und ist damit&quot;) then
+    schaetz_abs = 0.2
+  elseif string.match(text, &quot;steht auf der Schwelle des Todes und ist damit&quot;) then
+    schaetz_abs = 0.1
+  end
+
+
+-- ----------------------------------------------------------------------------
+-- Lps relativ zum Caster
+
+  if string.match(text, &quot;und ist damit absolut, unglaublich schwaecher als Du.&quot;) then
+    schaetz_rel_min = 0
+    schaetz_rel_max = ME.lp - 199
+  elseif string.match(text, &quot;und ist damit unglaublich schwaecher als Du.&quot;) then
+    schaetz_rel_min = ME.lp - 199
+    schaetz_rel_max = ME.lp - 150
+  elseif string.match(text, &quot;und ist damit sehr viel schwaecher als Du.&quot;) then
+    schaetz_rel_min = ME.lp - 149
+    schaetz_rel_max = ME.lp - 110
+  elseif string.match(text, &quot;und ist damit viel schwaecher als Du.&quot;) then
+    schaetz_rel_min = ME.lp - 109
+    schaetz_rel_max = ME.lp - 80
+  elseif string.match(text, &quot;und ist damit deutlich schwaecher als Du.&quot;) then
+    schaetz_rel_min = ME.lp - 79
+    schaetz_rel_max = ME.lp - 50
+  elseif string.match(text, &quot;und ist damit schwaecher als Du.&quot;) then
+    schaetz_rel_min = ME.lp - 49
+    schaetz_rel_max = ME.lp - 30
+  elseif string.match(text, &quot;und ist damit etwas schwaecher als Du.&quot;) then
+    schaetz_rel_min = ME.lp - 29
+    schaetz_rel_max = ME.lp - 20
+  elseif string.match(text, &quot;und ist damit fast so stark wie Du.&quot;) then
+    schaetz_rel_min = ME.lp - 19
+    schaetz_rel_max = ME.lp - 10
+  elseif string.match(text, &quot;und ist damit etwa genauso stark wie Du.&quot;) then
+    schaetz_rel_min = ME.lp - 9
+    schaetz_rel_max = ME.lp + 10
+  elseif string.match(text, &quot;und ist damit ein klein wenig staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 11
+    schaetz_rel_max = ME.lp + 20
+  elseif string.match(text, &quot;und ist damit etwas staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 21
+    schaetz_rel_max = ME.lp + 30
+  elseif string.match(text, &quot;und ist damit staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 31
+    schaetz_rel_max = ME.lp + 50
+  elseif string.match(text, &quot;und ist damit deutlich staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 51
+    schaetz_rel_max = ME.lp + 80
+  elseif string.match(text, &quot;und ist damit viel staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 81
+    schaetz_rel_max = ME.lp + 120
+  elseif string.match(text, &quot;und ist damit sehr viel staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 121
+    schaetz_rel_max = ME.lp + 180
+  elseif string.match(text, &quot;und ist damit sehr sehr viel staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 181
+    schaetz_rel_max = ME.lp + 250
+  elseif string.match(text, &quot;und ist damit ueberaus sehr viel staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 251
+    schaetz_rel_max = ME.lp + 350
+  elseif string.match(text, &quot;und ist damit gewaltig staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 351
+    schaetz_rel_max = ME.lp + 500
+  elseif string.match(text, &quot;und ist damit unglaublich staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 501
+    schaetz_rel_max = ME.lp + 1000
+  elseif string.match(text, &quot;und ist damit wahnsinnig viel staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 1001
+    schaetz_rel_max = ME.lp + 2000
+  elseif string.match(text, &quot;und ist damit weghiermaessig viel staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 2001
+    schaetz_rel_max = ME.lp + 3000
+  elseif string.match(text, &quot;und ist damit jenseits aller Grenzen viel staerker als Du.&quot;) then
+    schaetz_rel_min = ME.lp + 3000
+    schaetz_rel_max = &quot;oo&quot;
+  else -- huh?
+    schaetz_rel_min = 0
+    schaetz_rel_max = 0
+  end
+
+-- ----------------------------------------------------------------------------
+--  Hands oder Waffe, welche DTs werden damit verursacht?
+--    [Er|Sie|Es] macht damit folgenden Schaden: 
+
+  local wp, dt = string.match(text, &quot;%. (.-) macht folgenden Schaden: ([^%.]-)%.&quot;)
+  if not wp then
+    dt = string.match(text, &quot;%. .- macht damit folgenden Schaden: ([^%.]-)%.&quot;)
+    if not dt then
+      schaetz_weapon = &quot;???&quot;
+      schaetz_weapon_dt = &quot;???&quot;
+    else
+      schaetz_weapon = &quot;ohne&quot;
+      schaetz_weapon_dt = dt
+    end
+  else
+    -- doppelte Sätze löschen
+    wp = string.gsub(wp, &quot;^Eine? &quot;, &quot;&quot;)
+    schaetz_weapon = wp
+    schaetz_weapon_dt = dt
+  end
+
+-- ----------------------------------------------------------------------------
+--  Wie gut ist die Waffe des Targets? (-6 bis +10)
+--    Damit kaempft (er|sie|es) (.*) (als|wie) Du.
+
+-- ----------------------------------------------------------------------------
+--  Wie gut ist das Target geschuetzt? (-6 bis +13)
+--    Damit ist (er|sie|es) (.*) (als|wie) Du geschuetzt.
+
+-- ----------------------------------------------------------------------------
+--  Anfaelligkeiten/Resistenzen *aechz*
+--[[  (Er|Sie|Es) ist gegen (schneidenden Schaden|zerschmetternden Schaden|stechenden 
+      Schaden|reissenden Schaden|peitschenden Schaden|zerquetschenden Schaden|
+      explodierenden Schaden) (extrem anfaellig|sehr anfaellig|anfaellig|geschuetzt|
+      sehr gut geschuetzt|extrem gut geschuetzt)
+--]]
+--[[  &quot;.- ist gegen (^ )- Schaden (.-)%.&quot;
+      &quot;ist gegen ([%a]-) Schaden ([%a%s]-)%.&quot;
+--]]
+--[[  Ein kleiner Saeuredaemon ist absolut fit und ist damit ueberaus sehr viel staerker als Du. Er 
+      kaempft mit aetzenden Klauen. Er macht damit folgenden Schaden: Reissen und Saeure. Damit kaempft 
+      er deutlich besser als Du. Ein kleiner Saeuredaemon traegt ein Paar Adamantschuhe. Damit ist er 
+      deutlich schlechter als Du geschuetzt. Er ist gegen zerschmetternden Schaden geschuetzt. Er ist 
+      gegen schneidenden Schaden geschuetzt. Er ist gegen peitschenden Schaden sehr gut geschuetzt. Er 
+      ist gegen reissenden Schaden sehr gut geschuetzt.  Ein kleiner Saeuredaemon ist etwa 187cm gross. 
+--]]
+
+  schaetz_resis = {}
+  local res_pat = &quot;ist gegen ([%a]-) Schaden ([%a%s]-)%.&quot;
+
+  string.gfind(text, res_pat, function (dt, r) 
+    dt = string.gsub(dt, 'zerschmetternden Schaden', 'Schlaege')
+    dt = string.gsub(dt, 'schneidenden Schaden', 'Schnitte')
+    dt = string.gsub(dt, 'stechenden Schaden','Stiche')
+    dt = string.gsub(dt, 'peitschenden Schaden','Peitschen')
+    dt = string.gsub(dt, 'zerquetschenden Schaden','Quetschen')
+    dt = string.gsub(dt, 'explodierenden Schaden','Explosionen')
+    dt = string.gsub(dt, 'reissenden Schaden','Reissen')
+  end)
+
+  if schaetz_resis.r then
+      table.insert(schaetz_resis.r, dt)
+  else
+      table.insert(schaetz_resis, r, {dt})
+  end
+
+  -- Above noch nicht getestet 
+
+-- ----------------------------------------------------------------------------
+--  Ist das Target nicht mehr absolut fit, rechnen wir mal hoch, wieviel er
+--  ungefaehr haette...
+
+--[[
+  if schaetz_abs then
+    if schaetz_abs ~= 1 then
+      if schaetz_rel_max == &quot;oo&quot; then
+        schaetz_calc_100 = &quot;Leben(10): &quot; .. schaetz_rel_min * 10 / schaetz_abs .. &quot; - oo&quot;
+      else
+        schaetz_calc_100 = &quot;Leben(10): &quot; .. schaetz_rel_min * 10 / schaetz_abs .. &quot; - &quot; .. schaetz_rel_max * 10 / schaetz_abs 
+      end
+    else
+      schaetz_calc_100 = &quot;&quot;
+    end
+  end
+--]]
+
+
+
+-- ----------------------------------------------------------------------------
+--  Die Ruestungsliste scrollt auch so genug, also killen wir erstmal
+--  saemtliche Artikel
+--    traegt ([^.]*).
+
+-- ----------------------------------------------------------------------------
+--  Groesse merken
+  schaetz_size = string.match(text, &quot;ist etwa ([0-9]+)cm gross.&quot;)
+
+-- ----------------------------------------------------------------------------
+-- Start Ausgabe
+
+  fg(farben.vg.info)
+  bg(farben.hg.info)
+
+-- ----------------------------------------------------------------------------
+-- Lps und Waffe ausgeben (unproblematisch)
+
+  if schaetz_abs  then 
+    schaetz_abs  = &quot; (&quot; .. schaetz_abs * 100 .. &quot;%)&quot; 
+  else
+    schaetz_abs  = &quot; (???%)&quot;
+  end
+
+
+  echo(&quot;\n&quot; .. target .. &quot; (&quot; .. schaetz_size .. &quot; cm) geschaetzt:&quot;)
+  echo(&quot;\nLeben&quot; .. schaetz_abs .. &quot;: &quot; .. schaetz_rel_min .. &quot; - &quot; .. schaetz_rel_max)
+  echo(&quot;\nWaffe: &quot; .. schaetz_weapon .. &quot; (&quot; .. schaetz_weapon_dt .. &quot;)&quot;)
+
+
+  -- Resistenzen ausgeben:
+  --[[
+  /if ({schaetz_max_res}!~'') /echo -p @{Cred}Resis (!)@{n}:%schaetz_max_res%;/endif%;\
+  /if ({schaetz_strong_res}!~'') /echo -p @{Cred}Resis (+)@{n}:%schaetz_strong_res%;/endif%;\
+  /if ({schaetz_weak_res}!~'') /echo -p @{Cred}Resis (-)@{n}:%schaetz_weak_res%;/endif%;\
+  /if ({schaetz_weak_anf}!~'') /echo -p @{Cgreen}Empf (-)@{n}:%schaetz_weak_anf%;/endif%;\
+  /if ({schaetz_strong_anf}!~'') /echo -p @{Cgreen}Empf (+)@{n}:%schaetz_strong_anf%;/endif%;\
+  /if ({schaetz_max_anf}!~'') /echo -p @{Cgreen}Empf (!)@{n}:%schaetz_max_anf%;/endif%;\
+  --]]
+
+-- ----------------------------------------------------------------------------
+-- Ende Ausgabe
+
+  resetFormat()
+
+end</script>
+                <triggerType>0</triggerType>
+                <conditonLineDelta>0</conditonLineDelta>
+                <mStayOpen>1</mStayOpen>
+                <mCommand></mCommand>
+                <packageName></packageName>
+                <mFgColor>#ff0000</mFgColor>
+                <mBgColor>#ffff00</mBgColor>
+                <mSoundFile></mSoundFile>
+                <colorTriggerFgColor>#000000</colorTriggerFgColor>
+                <colorTriggerBgColor>#000000</colorTriggerBgColor>
+                <regexCodeList>
+                    <string>(ist absolut fit|ist leicht geschwaecht|fuehlte sich auch schon besser|ist leicht angekratzt|ist nicht mehrtaufrisch|sieht recht mitgenommen aus|wankt bereits bedenklich|ist in keiner guten Verfassung|braucht dringend einen Arzt|steht auf der Schwelle des Todes) und ist damit</string>
+                </regexCodeList>
+                <regexCodePropertyList>
+                    <integer>1</integer>
+                </regexCodePropertyList>
+            </Trigger>
+        </TriggerGroup>
+        <TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
             <name>Krrrcks: Farb-Trigger</name>
             <script></script>
             <triggerType>0</triggerType>

@@ -310,7 +310,7 @@ end</script>
                 <colorTriggerFgColor>#000000</colorTriggerFgColor>
                 <colorTriggerBgColor>#000000</colorTriggerBgColor>
                 <regexCodeList>
-                    <string>(ist absolut fit|ist leicht geschwaecht|fuehlte sich auch schon besser|ist leicht angekratzt|ist nicht mehrtaufrisch|sieht recht mitgenommen aus|wankt bereits bedenklich|ist in keiner guten Verfassung|braucht dringend einen Arzt|steht auf der Schwelle des Todes) und ist damit</string>
+                    <string>(ist absolut fit|ist leicht geschwaecht|fuehlte sich auch schon besser|ist leicht angekratzt|ist nicht mehr taufrisch|sieht recht mitgenommen aus|wankt bereits bedenklich|ist in keiner guten Verfassung|braucht dringend einen Arzt|steht auf der Schwelle des Todes) und ist damit</string>
                 </regexCodeList>
                 <regexCodePropertyList>
                     <integer>1</integer>

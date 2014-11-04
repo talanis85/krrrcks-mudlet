@@ -169,7 +169,7 @@ function schaetz_ausgabe()
 --  Hands oder Waffe, welche DTs werden damit verursacht?
 --    [Er|Sie|Es] macht damit folgenden Schaden: 
 
-  local wp, dt = string.match(text, &quot;%. (.-) macht folgenden Schaden: ([^%.]-)%.&quot;)
+  local wp, dt = string.match(text, &quot;%. ([^%.]-) macht folgenden Schaden: ([^%.]-)%.&quot;)
   if not wp then
     dt = string.match(text, &quot;%. .- macht damit folgenden Schaden: ([^%.]-)%.&quot;)
     if not dt then
@@ -190,9 +190,108 @@ function schaetz_ausgabe()
 --  Wie gut ist die Waffe des Targets? (-6 bis +10)
 --    Damit kaempft (er|sie|es) (.*) (als|wie) Du.
 
+  local dmg = string.match(text, &quot;Damit kaempft .- (.*) .- Du%.&quot;)
+  local wp_qual
+  if dmg == &quot;unglaublich viel viel schlechter&quot; then
+    wp_qual = &quot;-6%&quot;
+  elseif dmg == &quot;sehr viel schlechter&quot; then
+    wp_qual = &quot;-5%&quot;
+  elseif dmg == &quot;viel schlechter&quot; then
+    wp_qual = &quot;-4%&quot;
+  elseif dmg == &quot;deutlich schlechter&quot; then
+    wp_qual = &quot;-3%&quot;
+  elseif dmg == &quot;schlechter&quot; then
+    wp_qual = &quot;-2%&quot;
+  elseif dmg == &quot;etwas schlechter&quot; then
+    wp_qual = &quot;-1%&quot;
+  elseif dmg == &quot;etwa genauso gut&quot; then
+    wp_qual = &quot;0%&quot;
+  elseif dmg == &quot;etwas besser&quot; then
+    wp_qual = &quot;1%&quot;
+  elseif dmg == &quot;besser&quot; then
+    wp_qual = &quot;2%&quot;
+  elseif dmg == &quot;deutlich besser&quot; then
+    wp_qual = &quot;3%&quot;
+  elseif dmg == &quot;viel besser&quot; then
+    wp_qual = &quot;4%&quot;
+  elseif dmg == &quot;sehr viel besser&quot; then
+    wp_qual = &quot;5%&quot;
+  elseif dmg == &quot;sehr sehr viel besser&quot; then
+    wp_qual = &quot;6%&quot;
+  elseif dmg == &quot;ueberaus sehr viel besser&quot; then
+    wp_qual = &quot;7%&quot;
+  elseif dmg == &quot;wahnsinnig viel besser&quot; then
+    wp_qual = &quot;8%&quot;
+  elseif dmg == &quot;unbeschreiblich viel besser&quot; then
+    wp_qual = &quot;9%&quot;
+  elseif dmg == &quot;jenseits aller Grenzen viel besser&quot; then
+    wp_qual = &quot;10%&quot;
+  else
+    wp_qual = &quot;?%&quot;
+  end
+ 
+  schaetz_weapon_qual = wp_qual
+
+
 -- ----------------------------------------------------------------------------
 --  Wie gut ist das Target geschuetzt? (-6 bis +13)
 --    Damit ist (er|sie|es) (.*) (als|wie) Du geschuetzt.
+
+  local arm = string.match(text, &quot;Damit ist .- (.*) .- Du geschuetzt%.&quot;)
+  local body_qual
+  if arm then
+    if arm == &quot;unglaublich viel viel schlechter&quot; then
+      body_qual = &quot;-6%&quot;
+    elseif arm == &quot;sehr viel schlechter&quot; then
+      body_qual = &quot;-5%&quot;
+    elseif arm == &quot;viel schlechter&quot; then
+      body_qual = &quot;-4%&quot;
+    elseif arm == &quot;deutlich schlechter&quot; then
+      body_qual = &quot;-3%&quot;
+    elseif arm == &quot;schlechter&quot; then
+      body_qual = &quot;-2%&quot;
+    elseif arm == &quot;etwas schlechter&quot; then
+      body_qual = &quot;-1%&quot;
+    elseif arm == &quot;genauso gut&quot; then
+      body_qual = &quot;0%&quot;
+    elseif arm == &quot;ein kleines bisschen besser&quot; then
+      body_qual = &quot;1%&quot;
+    elseif arm == &quot;etwas besser&quot; then
+      body_qual = &quot;2%&quot;
+    elseif arm == &quot;besser&quot; then
+      body_qual = &quot;3%&quot;
+    elseif arm == &quot;deutlich besser&quot; then
+      body_qual = &quot;4%&quot;
+    elseif arm == &quot;viel besser&quot; then
+      body_qual = &quot;5%&quot;
+    elseif arm == &quot;sehr viel besser&quot; then
+      body_qual = &quot;6%&quot;
+    elseif arm == &quot;viel viel besser&quot; then
+      body_qual = &quot;7%&quot;
+    elseif arm == &quot;sehr sehr viel besser&quot; then
+      body_qual = &quot;8%&quot;
+    elseif arm == &quot;ueberaus sehr viel besser&quot; then
+      body_qual = &quot;9%&quot;
+    elseif arm == &quot;unglaublich viel besser&quot; then
+      body_qual = &quot;10%&quot;
+    elseif arm == &quot;wahnsinnig viel besser&quot; then
+      body_qual = &quot;11%&quot;
+    elseif arm == &quot;unbeschreiblich viel besser&quot; then
+      body_qual = &quot;12%&quot;
+    elseif arm == &quot;jenseits aller Grenzen viel besser&quot; then
+      body_qual = &quot;13%&quot;
+    end
+  else
+    body_qual = &quot;?%&quot;
+  end
+ 
+  schaetz_body_qual = body_qual
+ 
+  if string.match(text, &quot;ungewoehnlich dicke Haut, bzw. Fell&quot;) then
+    schaetz_body_high = &quot;!(&quot;
+  else
+    schaetz_body_high = &quot;(&quot;
+  end
 
 -- ----------------------------------------------------------------------------
 --  Anfaelligkeiten/Resistenzen *aechz*
@@ -212,27 +311,41 @@ function schaetz_ausgabe()
       ist gegen reissenden Schaden sehr gut geschuetzt.  Ein kleiner Saeuredaemon ist etwa 187cm gross. 
 --]]
 
-  schaetz_resis = {}
+  schaetz_max_res = &quot;&quot;
+  schaetz_strong_res = &quot;&quot;
+  schaetz_weak_res = &quot;&quot;
+  schaetz_weak_anf = &quot;&quot;
+  schaetz_strong_anf = &quot;&quot;
+  schaetz_max_anf = &quot;&quot;
   local res_pat = &quot;ist gegen ([%a]-) Schaden ([%a%s]-)%.&quot;
 
-  string.gfind(text, res_pat, function (dt, r) 
-    dt = string.gsub(dt, 'zerschmetternden Schaden', 'Schlaege')
-    dt = string.gsub(dt, 'schneidenden Schaden', 'Schnitte')
-    dt = string.gsub(dt, 'stechenden Schaden','Stiche')
-    dt = string.gsub(dt, 'peitschenden Schaden','Peitschen')
-    dt = string.gsub(dt, 'zerquetschenden Schaden','Quetschen')
-    dt = string.gsub(dt, 'explodierenden Schaden','Explosionen')
-    dt = string.gsub(dt, 'reissenden Schaden','Reissen')
-  end)
+  for dt, r in string.gfind(text, res_pat) do
+    dt = string.gsub(dt, 'zerschmetternden', 'Schlaege')
+    dt = string.gsub(dt, 'schneidenden', 'Schnitte')
+    dt = string.gsub(dt, 'stechenden','Stiche')
+    dt = string.gsub(dt, 'peitschenden','Peitschen')
+    dt = string.gsub(dt, 'zerquetschenden','Quetschen')
+    dt = string.gsub(dt, 'explodierenden','Explosionen')
+    dt = string.gsub(dt, 'reissenden','Reissen')
 
-  if schaetz_resis.r then
-      table.insert(schaetz_resis.r, dt)
-  else
-      table.insert(schaetz_resis, r, {dt})
+  if r == &quot;extrem anfaellig&quot; then
+    schaetz_max_res = schaetz_max_res .. dt .. &quot;, &quot;
+  elseif r == &quot;sehr anfaellig&quot; then
+    schaetz_strong_res = schaetz_strong_res .. dt .. &quot;, &quot;
+  elseif r == &quot;anfaellig&quot; then
+    schaetz_weak_res = schaetz_weak_res .. dt .. &quot;, &quot;
+  elseif r == &quot;geschuetzt&quot; then
+    schaetz_weak_anf = schaetz_weak_anf .. dt .. &quot;, &quot;
+  elseif r == &quot;sehr gut geschuetzt&quot; then
+    schaetz_strong_anf = schaetz_strong_anf .. dt .. &quot;, &quot;
+  elseif r == &quot;extrem gut geschuetzt&quot; then
+    schaetz_max_anf = schaetz_max_anf .. dt .. &quot;, &quot;
   end
 
-  -- Above noch nicht getestet 
-
+-- ----------------------------------------------------------------------------
+--  Groesse merken
+  schaetz_size = string.match(text, &quot;ist etwa ([0-9]+)cm gross.&quot;)
+  
 -- ----------------------------------------------------------------------------
 --  Ist das Target nicht mehr absolut fit, rechnen wir mal hoch, wieviel er
 --  ungefaehr haette...
@@ -256,11 +369,60 @@ function schaetz_ausgabe()
 -- ----------------------------------------------------------------------------
 --  Die Ruestungsliste scrollt auch so genug, also killen wir erstmal
 --  saemtliche Artikel
---    traegt ([^.]*).
+--    traegt ([^.]*)%.
 
--- ----------------------------------------------------------------------------
---  Groesse merken
-  schaetz_size = string.match(text, &quot;ist etwa ([0-9]+)cm gross.&quot;)
+  local armor = string.match(text, &quot;traegt ([^.]*)%.&quot;)
+  if armor then
+    armor = string.gsub(armor, &quot;keine zusaetzliche Ruestung&quot;, &quot;ohne&quot;)
+    armor = string.gsub(armor, &quot;den &quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;die &quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;das &quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;einem &quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;einen &quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;eine &quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;ein &quot;, &quot;&quot;)
+  else
+    armor = &quot;ohne&quot;
+  end
+
+--  Sachen, die nur scrollen, einen aber nicht interessieren (ToDo: Schalter
+--  einbauen)
+
+  armor = string.gsub(armor, &quot;``Born to Kill''-Stirnband&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Eisschamanenpanzer&quot;, &quot;ESP&quot;)
+  armor = string.gsub(armor, &quot;Anti-Feuer-Ring&quot;, &quot;AFR&quot;)
+  armor = string.gsub(armor, &quot;drakonischen Waffenguertel&quot;, &quot;Waffenguertel&quot;)
+  armor = string.gsub(armor, &quot;Kette mit Schaedelanhaenger&quot;, &quot;DD-Kette&quot;)
+  armor = string.gsub(armor, &quot;Ruestung des Hydratoeters&quot;, &quot;HyRue&quot;)
+  armor = string.gsub(armor, &quot;traumhafte Wespentaille&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;schwarzen Siegelring&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Paar &quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;goldenen Nasenring&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Polar-Button&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;rotes Zipfelmuetzchen&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Schleimklumpen&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;MASTERBLOCK&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Scoreamulett&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Goldkette&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;magische Sonnenuhr&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;adamantenen Ehering&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Verlobungsring&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Matrixkristall&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Armbanduhr&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Rucksack&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Drachentoeter-Orden&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Hundehalsband&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;Fussring&quot;, &quot;&quot;)
+  armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
+  armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
+  armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
+
+--  Fuehrende Kommata loeschen...
+  if string.sub(armor,1,2) == &quot;, &quot; then
+    armor = string.sub(armor,3)
+  end
+ 
+  schaetz_armor = armor
 
 -- ----------------------------------------------------------------------------
 -- Start Ausgabe
@@ -280,18 +442,18 @@ function schaetz_ausgabe()
 
   echo(&quot;\n&quot; .. target .. &quot; (&quot; .. schaetz_size .. &quot; cm) geschaetzt:&quot;)
   echo(&quot;\nLeben&quot; .. schaetz_abs .. &quot;: &quot; .. schaetz_rel_min .. &quot; - &quot; .. schaetz_rel_max)
-  echo(&quot;\nWaffe: &quot; .. schaetz_weapon .. &quot; (&quot; .. schaetz_weapon_dt .. &quot;)&quot;)
+  echo(&quot;\nWaffe (&quot; .. schaetz_weapon_qual .. &quot;): &quot; .. schaetz_weapon .. &quot; (&quot; .. schaetz_weapon_dt .. &quot;)&quot;)
 
+ -- Ruestungen ausgeben
+  echo(&quot;\nRuestung &quot; .. schaetz_body_high .. schaetz_body_qual .. &quot;): &quot; .. schaetz_armor)
 
   -- Resistenzen ausgeben:
-  --[[
-  /if ({schaetz_max_res}!~'') /echo -p @{Cred}Resis (!)@{n}:%schaetz_max_res%;/endif%;\
-  /if ({schaetz_strong_res}!~'') /echo -p @{Cred}Resis (+)@{n}:%schaetz_strong_res%;/endif%;\
-  /if ({schaetz_weak_res}!~'') /echo -p @{Cred}Resis (-)@{n}:%schaetz_weak_res%;/endif%;\
-  /if ({schaetz_weak_anf}!~'') /echo -p @{Cgreen}Empf (-)@{n}:%schaetz_weak_anf%;/endif%;\
-  /if ({schaetz_strong_anf}!~'') /echo -p @{Cgreen}Empf (+)@{n}:%schaetz_strong_anf%;/endif%;\
-  /if ({schaetz_max_anf}!~'') /echo -p @{Cgreen}Empf (!)@{n}:%schaetz_max_anf%;/endif%;\
-  --]]
+  if schaetz_max_res ~= &quot;&quot; then echo(&quot;\nResis (!): &quot; .. schaetz_max_res) end
+  if schaetz_strong_res ~= &quot;&quot; then echo(&quot;\nResis (+): &quot; .. schaetz_strong_res) end
+  if schaetz_weak_res ~= &quot;&quot; then echo(&quot;\nResis (-): &quot; .. schaetz_weak_res) end
+  if schaetz_weak_anf ~= &quot;&quot; then echo(&quot;\nResis (-): &quot; .. schaetz_weak_anf) end
+  if schaetz_strong_anf ~= &quot;&quot; then echo(&quot;\nResis (+): &quot; .. schaetz_strong_anf) end
+  if schaetz_max_anf ~= &quot;&quot; then echo(&quot;\nResis (!): &quot; .. schaetz_max_anf) end
 
 -- ----------------------------------------------------------------------------
 -- Ende Ausgabe

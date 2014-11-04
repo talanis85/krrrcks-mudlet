@@ -193,41 +193,41 @@ function schaetz_ausgabe()
   local dmg = string.match(text, &quot;Damit kaempft .- (.*) .- Du%.&quot;)
   local wp_qual
   if dmg == &quot;unglaublich viel viel schlechter&quot; then
-    wp_qual = &quot;-6%&quot;
+    wp_qual = &quot;-6&quot;
   elseif dmg == &quot;sehr viel schlechter&quot; then
-    wp_qual = &quot;-5%&quot;
+    wp_qual = &quot;-5&quot;
   elseif dmg == &quot;viel schlechter&quot; then
-    wp_qual = &quot;-4%&quot;
+    wp_qual = &quot;-4&quot;
   elseif dmg == &quot;deutlich schlechter&quot; then
-    wp_qual = &quot;-3%&quot;
+    wp_qual = &quot;-3&quot;
   elseif dmg == &quot;schlechter&quot; then
-    wp_qual = &quot;-2%&quot;
+    wp_qual = &quot;-2&quot;
   elseif dmg == &quot;etwas schlechter&quot; then
-    wp_qual = &quot;-1%&quot;
+    wp_qual = &quot;-1&quot;
   elseif dmg == &quot;etwa genauso gut&quot; then
-    wp_qual = &quot;0%&quot;
+    wp_qual = &quot;0&quot;
   elseif dmg == &quot;etwas besser&quot; then
-    wp_qual = &quot;1%&quot;
+    wp_qual = &quot;1&quot;
   elseif dmg == &quot;besser&quot; then
-    wp_qual = &quot;2%&quot;
+    wp_qual = &quot;2&quot;
   elseif dmg == &quot;deutlich besser&quot; then
-    wp_qual = &quot;3%&quot;
+    wp_qual = &quot;3&quot;
   elseif dmg == &quot;viel besser&quot; then
-    wp_qual = &quot;4%&quot;
+    wp_qual = &quot;4&quot;
   elseif dmg == &quot;sehr viel besser&quot; then
-    wp_qual = &quot;5%&quot;
+    wp_qual = &quot;5&quot;
   elseif dmg == &quot;sehr sehr viel besser&quot; then
-    wp_qual = &quot;6%&quot;
+    wp_qual = &quot;6&quot;
   elseif dmg == &quot;ueberaus sehr viel besser&quot; then
-    wp_qual = &quot;7%&quot;
+    wp_qual = &quot;7&quot;
   elseif dmg == &quot;wahnsinnig viel besser&quot; then
-    wp_qual = &quot;8%&quot;
+    wp_qual = &quot;8&quot;
   elseif dmg == &quot;unbeschreiblich viel besser&quot; then
-    wp_qual = &quot;9%&quot;
+    wp_qual = &quot;9&quot;
   elseif dmg == &quot;jenseits aller Grenzen viel besser&quot; then
-    wp_qual = &quot;10%&quot;
+    wp_qual = &quot;10&quot;
   else
-    wp_qual = &quot;?%&quot;
+    wp_qual = &quot;?&quot;
   end
  
   schaetz_weapon_qual = wp_qual
@@ -241,48 +241,48 @@ function schaetz_ausgabe()
   local body_qual
   if arm then
     if arm == &quot;unglaublich viel viel schlechter&quot; then
-      body_qual = &quot;-6%&quot;
+      body_qual = &quot;-6&quot;
     elseif arm == &quot;sehr viel schlechter&quot; then
-      body_qual = &quot;-5%&quot;
+      body_qual = &quot;-5&quot;
     elseif arm == &quot;viel schlechter&quot; then
-      body_qual = &quot;-4%&quot;
+      body_qual = &quot;-4&quot;
     elseif arm == &quot;deutlich schlechter&quot; then
-      body_qual = &quot;-3%&quot;
+      body_qual = &quot;-3&quot;
     elseif arm == &quot;schlechter&quot; then
-      body_qual = &quot;-2%&quot;
+      body_qual = &quot;-2&quot;
     elseif arm == &quot;etwas schlechter&quot; then
-      body_qual = &quot;-1%&quot;
+      body_qual = &quot;-1&quot;
     elseif arm == &quot;genauso gut&quot; then
-      body_qual = &quot;0%&quot;
+      body_qual = &quot;0&quot;
     elseif arm == &quot;ein kleines bisschen besser&quot; then
-      body_qual = &quot;1%&quot;
+      body_qual = &quot;1&quot;
     elseif arm == &quot;etwas besser&quot; then
-      body_qual = &quot;2%&quot;
+      body_qual = &quot;2&quot;
     elseif arm == &quot;besser&quot; then
-      body_qual = &quot;3%&quot;
+      body_qual = &quot;3&quot;
     elseif arm == &quot;deutlich besser&quot; then
-      body_qual = &quot;4%&quot;
+      body_qual = &quot;4&quot;
     elseif arm == &quot;viel besser&quot; then
-      body_qual = &quot;5%&quot;
+      body_qual = &quot;5&quot;
     elseif arm == &quot;sehr viel besser&quot; then
-      body_qual = &quot;6%&quot;
+      body_qual = &quot;6&quot;
     elseif arm == &quot;viel viel besser&quot; then
-      body_qual = &quot;7%&quot;
+      body_qual = &quot;7&quot;
     elseif arm == &quot;sehr sehr viel besser&quot; then
-      body_qual = &quot;8%&quot;
+      body_qual = &quot;8&quot;
     elseif arm == &quot;ueberaus sehr viel besser&quot; then
-      body_qual = &quot;9%&quot;
+      body_qual = &quot;9&quot;
     elseif arm == &quot;unglaublich viel besser&quot; then
-      body_qual = &quot;10%&quot;
+      body_qual = &quot;10&quot;
     elseif arm == &quot;wahnsinnig viel besser&quot; then
-      body_qual = &quot;11%&quot;
+      body_qual = &quot;11&quot;
     elseif arm == &quot;unbeschreiblich viel besser&quot; then
-      body_qual = &quot;12%&quot;
+      body_qual = &quot;12&quot;
     elseif arm == &quot;jenseits aller Grenzen viel besser&quot; then
-      body_qual = &quot;13%&quot;
+      body_qual = &quot;13&quot;
     end
   else
-    body_qual = &quot;?%&quot;
+    body_qual = &quot;?&quot;
   end
  
   schaetz_body_qual = body_qual

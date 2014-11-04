@@ -372,7 +372,11 @@ function schaetz_ausgabe()
 --    traegt ([^.]*)%.
 
   local armor = string.match(text, &quot;traegt ([^.]*)%.&quot;)
-  if armor then
+  
+  if not armor then
+    armor = &quot;ohne&quot;
+  else
+  
     armor = string.gsub(armor, &quot;keine zusaetzliche Ruestung&quot;, &quot;ohne&quot;)
     armor = string.gsub(armor, &quot;den &quot;, &quot;&quot;)
     armor = string.gsub(armor, &quot;die &quot;, &quot;&quot;)
@@ -381,47 +385,45 @@ function schaetz_ausgabe()
     armor = string.gsub(armor, &quot;einen &quot;, &quot;&quot;)
     armor = string.gsub(armor, &quot;eine &quot;, &quot;&quot;)
     armor = string.gsub(armor, &quot;ein &quot;, &quot;&quot;)
-  else
-    armor = &quot;ohne&quot;
-  end
 
 --  Sachen, die nur scrollen, einen aber nicht interessieren (ToDo: Schalter
 --  einbauen)
 
-  armor = string.gsub(armor, &quot;``Born to Kill''-Stirnband&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Eisschamanenpanzer&quot;, &quot;ESP&quot;)
-  armor = string.gsub(armor, &quot;Anti-Feuer-Ring&quot;, &quot;AFR&quot;)
-  armor = string.gsub(armor, &quot;drakonischen Waffenguertel&quot;, &quot;Waffenguertel&quot;)
-  armor = string.gsub(armor, &quot;Kette mit Schaedelanhaenger&quot;, &quot;DD-Kette&quot;)
-  armor = string.gsub(armor, &quot;Ruestung des Hydratoeters&quot;, &quot;HyRue&quot;)
-  armor = string.gsub(armor, &quot;traumhafte Wespentaille&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;schwarzen Siegelring&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Paar &quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;goldenen Nasenring&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Polar-Button&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;rotes Zipfelmuetzchen&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Schleimklumpen&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;MASTERBLOCK&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Scoreamulett&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Goldkette&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;magische Sonnenuhr&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;adamantenen Ehering&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Verlobungsring&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Matrixkristall&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Armbanduhr&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Rucksack&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Drachentoeter-Orden&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Hundehalsband&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;Fussring&quot;, &quot;&quot;)
-  armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
-  armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
-  armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
+    armor = string.gsub(armor, &quot;``Born to Kill''-Stirnband&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Eisschamanenpanzer&quot;, &quot;ESP&quot;)
+    armor = string.gsub(armor, &quot;Anti-Feuer-Ring&quot;, &quot;AFR&quot;)
+    armor = string.gsub(armor, &quot;drakonischen Waffenguertel&quot;, &quot;Waffenguertel&quot;)
+    armor = string.gsub(armor, &quot;Kette mit Schaedelanhaenger&quot;, &quot;DD-Kette&quot;)
+    armor = string.gsub(armor, &quot;Ruestung des Hydratoeters&quot;, &quot;HyRue&quot;)
+    armor = string.gsub(armor, &quot;traumhafte Wespentaille&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;schwarzen Siegelring&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Paar &quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;goldenen Nasenring&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Polar-Button&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;rotes Zipfelmuetzchen&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Schleimklumpen&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;MASTERBLOCK&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Scoreamulett&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Goldkette&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;magische Sonnenuhr&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;adamantenen Ehering&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Verlobungsring&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Matrixkristall&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Armbanduhr&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Rucksack&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Drachentoeter-Orden&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Hundehalsband&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;Fussring&quot;, &quot;&quot;)
+    armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
+    armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
+    armor = string.gsub(armor, &quot;, ,&quot;, &quot;,&quot;)
 
 --  Fuehrende Kommata loeschen...
-  if string.sub(armor,1,2) == &quot;, &quot; then
-    armor = string.sub(armor,3)
+    if string.sub(armor,1,2) == &quot;, &quot; then
+      armor = string.sub(armor,3)
+    end
   end
- 
+  
   schaetz_armor = armor
 
 -- ----------------------------------------------------------------------------

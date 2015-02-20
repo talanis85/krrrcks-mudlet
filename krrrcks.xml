@@ -298,7 +298,7 @@ function schaetz_ausgabe()
 --[[  (Er|Sie|Es) ist gegen (schneidenden Schaden|zerschmetternden Schaden|stechenden 
       Schaden|reissenden Schaden|peitschenden Schaden|zerquetschenden Schaden|
       explodierenden Schaden) (extrem anfaellig|sehr anfaellig|anfaellig|geschuetzt|
-      sehr gut geschuetzt|extrem gut geschuetzt)
+      sehr gut geschuetzt|extrem gut geschuetzt|voellig immun)
 --]]
 --[[  &quot;.- ist gegen (^ )- Schaden (.-)%.&quot;
       &quot;ist gegen ([%a]-) Schaden ([%a%s]-)%.&quot;
@@ -340,6 +340,8 @@ function schaetz_ausgabe()
     schaetz_strong_anf = schaetz_strong_anf .. dt .. &quot;, &quot;
   elseif r == &quot;extrem gut geschuetzt&quot; then
     schaetz_max_anf = schaetz_max_anf .. dt .. &quot;, &quot;
+  elseif r == &quot;voellig immun&quot; then
+    schaetz_max_anf = schaetz_max_anf .. dt .. &quot;!, &quot;
   end
 
 -- ----------------------------------------------------------------------------

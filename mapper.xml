@@ -272,8 +272,6 @@ function handleRoomInfo()
             return true
         end
 
-        mapper.synchronized = false
-
         if knownRoom == -1 then
             -- Neuer Raum ist nicht bekannt. Erstelle Raum und entsprechenden Ausgang
 
